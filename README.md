@@ -36,7 +36,7 @@ seamless sound configuration.
 - Designed a profile-saving system, allowing users to store and switch between custom
 sound configurations effortlessly.
 - Link: https://apps.apple.com/us/app/skullcandy/id1466689851
-- ![SkullcandyScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/skullcandy.png) | ![SkullcandyScreenshot2](https://github.com/sabaanwar411/sabaanwar.github.io/main/assets/skullcandy2.png)
+- ![SkullcandyScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/skullcandy.png) | ![SkullcandyScreenshot2](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/skullcandy2.png)
 
 ### Loopdeck (Swift)
 - **Domain**: Photo/Video Editing
