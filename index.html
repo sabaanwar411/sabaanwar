@@ -1,224 +1,246 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2566">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times; color: #5a5a5a; -webkit-text-stroke: #5a5a5a; background-color: #fffffe}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Times; color: #5a5a5a; -webkit-text-stroke: #5a5a5a; background-color: #fffffe; min-height: 18.0px}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saba's Portfolio</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            color: #1a73e8;
+        }
+        header p {
+            font-size: 1.2em;
+            color: #666;
+        }
+        .project {
+            margin-bottom: 30px;
+        }
+        .project h3 {
+            font-size: 1.8em;
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+        .project img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        .project a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .project a:hover {
+            text-decoration: underline;
+        }
+        .section-title {
+            font-size: 2em;
+            margin: 40px 0 20px;
+            color: #333;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        footer a {
+            color: #1a73e8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            header h1 {
+                font-size: 2em;
+            }
+            .project h3 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;Saba's Portfolio&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #f5f5f5;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #333;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>line-height: 1.6;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.container {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-width: 900px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0 auto;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: #fff;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 30px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>header {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 40px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>header h1 {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 2.5em;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #1a73e8;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>header p {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 1.2em;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #666;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.project {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 30px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.project h3 {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 1.8em;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #1a73e8;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-bottom: 10px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.project img {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-width: 100%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: auto;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 8px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 10px 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.project a {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #1a73e8;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-decoration: none;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: bold;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: inline-block;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 10px 5px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.project a:hover {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-decoration: underline;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.section-title {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 2em;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 40px 0 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #333;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>ul {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>list-style: none;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>ul li {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 5px 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-size: 1.1em;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>footer {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-align: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin-top: 40px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>padding-top: 20px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-top: 1px solid #eee;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>footer a {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: #1a73e8;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-decoration: none;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 0 10px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>footer a:hover {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>text-decoration: underline;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@media (max-width: 600px) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.container {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>padding: 15px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>header h1 {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>font-size: 2em;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.project h3 {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>font-size: 1.5em;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;header&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h1&gt;Saba's Portfolio&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p&gt;Senior Software Engineer | iOS, React Native, Flutter&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/header&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;section&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2 class="section-title"&gt;Projects&lt;/h2&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="project"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;Software Funnels&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Domain:&lt;/strong&gt; Project Management&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Tech Stack:&lt;/strong&gt; Swift, WebRTC, AWS S3, Push Notifications&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Built a project management app from scratch with two core modules: Project Boards and TeamChat. Project Boards, similar to Trello, enables users to create sprints, tasks, and attach images or videos to tickets. TeamChat enhances communication with messaging, voice, and video call features.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;a href="https://apps.apple.com/pk/app/software-funnels/id1268630124" target="_blank"&gt;View on App Store&lt;/a&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="assets/sf1.png" alt="Software Funnels Screenshot"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="project"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;Revealix&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Domain:&lt;/strong&gt; Medical&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Tech Stack:&lt;/strong&gt; iOS Swift, Thermal SDK, Auth0&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Developed a medical app from scratch using MVP architecture to support diabetic foot care and complication prevention. Integrated FLIR Thermal SDK to capture thermal images of feet, ensuring seamless connectivity with FLIR camera. Analyzed thermal imaging data for single and dual limb assessments to detect and prevent diabetic limb complications.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;a href="https://revealix.com/#clinical-meets-technical" target="_blank"&gt;View on Revealix&lt;/a&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="assets/revealix.png" alt="Revealix Screenshot"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="project"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;Skull Candy&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Domain:&lt;/strong&gt; Music&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Tech Stack:&lt;/strong&gt; Swift, BLE, Push Notifications&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Developed a mobile application from the ground up using MVP architecture for optimal modularity and scalability. Implemented features for searching and connecting Skullcandy devices, enabling seamless sound configuration. Designed a profile-saving system, allowing users to store and switch between custom sound configurations effortlessly.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;a href="https://apps.apple.com/us/app/skullcandy/id1466689851" target="_blank"&gt;View on App Store&lt;/a&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="assets/skullcandy.png" alt="Skullcandy Screenshot 1"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="assets/skullcandy2.png" alt="Skullcandy Screenshot 2"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="project"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;Loopdeck&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Domain:&lt;/strong&gt; Photo/Video Editing&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Tech Stack:&lt;/strong&gt; Swift, Google Ads, Firebase, Core Data, In-App Purchase&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Developed and maintained the app with photo and video editing features. Implemented in-app purchases to enable users to access premium features, like merging multiple videos with different effects to enhance user engagement and app monetization. Integrated Google Mobile Ads to increase app revenue.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;a href="https://apps.apple.com/us/app/loopdeck-edit-loop-movies/id1593022317" target="_blank"&gt;View on App Store&lt;/a&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="assets/loopdeck.png" alt="Loopdeck Screenshot"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="project"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;Loopideo&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Domain:&lt;/strong&gt; Photos and Video&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Tech Stack:&lt;/strong&gt; Swift, Google Ads, Firebase&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Maintained the app with improving existing features and fixed memory issues and storage bugs. Integrated Google Mobile Ads to increase app revenue. Created Pro version with adding filters to enable pro features in the app.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;a href="https://apps.apple.com/us/app/loopideo-pro-loop-videos/id1343372109" target="_blank"&gt;View Pro on App Store&lt;/a&gt; |</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;a href="https://apps.apple.com/us/app/loopideo-loop-videos/id798990531" target="_blank"&gt;View Free on App Store&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="assets/loopideo1.png" alt="Loopideo Screenshot"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="project"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;Avokado افوكادو&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Domain:&lt;/strong&gt; Shopping&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Tech Stack:&lt;/strong&gt; iOS Swift, In-App Purchase&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Built an E-Commerce app for providing grocery services. Maintained app compatibility with newer iOS versions and provided support through bug fixes.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;a href="https://apps.apple.com/us/app/avokado-افوكادو/id1265492118" target="_blank"&gt;View on App Store&lt;/a&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="assets/avokado.png" alt="Avokado Screenshot"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="project"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;Parishes Online / Communities Online&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Domain:&lt;/strong&gt; Community Services&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Tech Stack:&lt;/strong&gt; React Native, One Signal&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Developed apps from scratch and upgraded it to the latest React Native version. Reduced code redundancy by 99% with creating two apps from a single code base with shared functionality using filters and configurations. Enabled search for parishes or communities, detailed information, weekly readings, and donations.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;a href="https://play.google.com/store/apps/details?id=com.lpiapp.lpiParish" target="_blank"&gt;Parishes Online (Google Play)&lt;/a&gt; |</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;a href="https://apps.apple.com/us/app/parishes-online/id6478508687" target="_blank"&gt;Parishes Online (App Store)&lt;/a&gt; |</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;a href="https://apps.apple.com/us/app/communities-online/id6478508698" target="_blank"&gt;Communities Online (App Store)&lt;/a&gt; |</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;a href="https://play.google.com/store/apps/details?id=com.lpiapp.lpiCommunity&amp;hl=en" target="_blank"&gt;Communities Online (Google Play)&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="assets/parishesCommunities.png" alt="Parishes/Communities Screenshot"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="project"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;ReupCycle&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Domain:&lt;/strong&gt; Business&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Tech Stack:&lt;/strong&gt; Flutter&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Developed a Flutter-based mobile app for trading used plastic bottles, enabling users to specify bottle quantities, provide pickup addresses, or locate drop-off points, and receive payments based on the number of bottles submitted.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;a href="https://play.google.com/store/apps/details?id=com.arhpez.reupcycle" target="_blank"&gt;View on Google Play&lt;/a&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="assets/Reupcycle1.png" alt="ReupCycle Screenshot"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="project"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;InstaRyde&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Domain:&lt;/strong&gt; Travel&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;strong&gt;Tech Stack:&lt;/strong&gt; Objective C, Google Maps, Google APIs, Braintree, PubNub&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Canada’s first on-demand ride sharing app that puts a safe, reliable and affordable ride for passengers. Developed an iOS app from scratch while collaborating with stakeholders to meet requirements.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;&lt;a href="https://itunes.apple.com/us/app/instaryde/id948357626?ls=1&amp;mt=8" target="_blank"&gt;View on App Store&lt;/a&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;footer&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p&gt;Contact: &lt;a href="mailto:sabaanwar411@gmail.com"&gt;sabaanwar411@gmail.com&lt;/a&gt; | &lt;a href="https://linkedin.com/in/sabaanwar" target="_blank"&gt;LinkedIn&lt;/a&gt; | &lt;a href="https://github.com/sabaanwar411" target="_blank"&gt;GitHub&lt;/a&gt;&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/footer&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+    <div class="container">
+        <header>
+            <h1>Saba's Portfolio</h1>
+            <p>Senior Software Engineer | iOS, React Native, Flutter</p>
+        </header>
+
+        <section>
+            <h2 class="section-title">Projects</h2>
+
+            <div class="project">
+                <h3>Software Funnels</h3>
+                <p><strong>Domain:</strong> Project Management</p>
+                <p><strong>Tech Stack:</strong> Swift, WebRTC, AWS S3, Push Notifications</p>
+                <p>Built a project management app from scratch with two core modules: Project Boards and TeamChat. Project Boards, similar to Trello, enables users to create sprints, tasks, and attach images or videos to tickets. TeamChat enhances communication with messaging, voice, and video call features.</p>
+                <p><a href="https://apps.apple.com/pk/app/software-funnels/id1268630124" target="_blank">View on App Store</a></p>
+                <img src="assets/sf1.png" alt="Software Funnels Screenshot">
+            </div>
+
+            <div class="project">
+                <h3>Revealix</h3>
+                <p><strong>Domain:</strong> Medical</p>
+                <p><strong>Tech Stack:</strong> iOS Swift, Thermal SDK, Auth0</p>
+                <p>Developed a medical app from scratch using MVP architecture to support diabetic foot care and complication prevention. Integrated FLIR Thermal SDK to capture thermal images of feet, ensuring seamless connectivity with FLIR camera. Analyzed thermal imaging data for single and dual limb assessments to detect and prevent diabetic limb complications.</p>
+                <p><a href="https://revealix.com/#clinical-meets-technical" target="_blank">View on Revealix</a></p>
+                <img src="assets/revealix.png" alt="Revealix Screenshot">
+            </div>
+
+            <div class="project">
+                <h3>Skull Candy</h3>
+                <p><strong>Domain:</strong> Music</p>
+                <p><strong>Tech Stack:</strong> Swift, BLE, Push Notifications</p>
+                <p>Developed a mobile application from the ground up using MVP architecture for optimal modularity and scalability. Implemented features for searching and connecting Skullcandy devices, enabling seamless sound configuration. Designed a profile-saving system, allowing users to store and switch between custom sound configurations effortlessly.</p>
+                <p><a href="https://apps.apple.com/us/app/skullcandy/id1466689851" target="_blank">View on App Store</a></p>
+                <img src="assets/skullcandy.png" alt="Skullcandy Screenshot 1">
+                <img src="assets/skullcandy2.png" alt="Skullcandy Screenshot 2">
+            </div>
+
+            <div class="project">
+                <h3>Loopdeck</h3>
+                <p><strong>Domain:</strong> Photo/Video Editing</p>
+                <p><strong>Tech Stack:</strong> Swift, Google Ads, Firebase, Core Data, In-App Purchase</p>
+                <p>Developed and maintained the app with photo and video editing features. Implemented in-app purchases to enable users to access premium features, like merging multiple videos with different effects to enhance user engagement and app monetization. Integrated Google Mobile Ads to increase app revenue.</p>
+                <p><a href="https://apps.apple.com/us/app/loopdeck-edit-loop-movies/id1593022317" target="_blank">View on App Store</a></p>
+                <img src="assets/loopdeck.png" alt="Loopdeck Screenshot">
+            </div>
+
+            <div class="project">
+                <h3>Loopideo</h3>
+                <p><strong>Domain:</strong> Photos and Video</p>
+                <p><strong>Tech Stack:</strong> Swift, Google Ads, Firebase</p>
+                <p>Maintained the app with improving existing features and fixed memory issues and storage bugs. Integrated Google Mobile Ads to increase app revenue. Created Pro version with adding filters to enable pro features in the app.</p>
+                <p>
+                    <a href="https://apps.apple.com/us/app/loopideo-pro-loop-videos/id1343372109" target="_blank">View Pro on App Store</a> |
+                    <a href="https://apps.apple.com/us/app/loopideo-loop-videos/id798990531" target="_blank">View Free on App Store</a>
+                </p>
+                <img src="assets/loopideo1.png" alt="Loopideo Screenshot">
+            </div>
+
+            <div class="project">
+                <h3>Avokado افوكادو</h3>
+                <p><strong>Domain:</strong> Shopping</p>
+                <p><strong>Tech Stack:</strong> iOS Swift, In-App Purchase</p>
+                <p>Built an E-Commerce app for providing grocery services. Maintained app compatibility with newer iOS versions and provided support through bug fixes.</p>
+                <p><a href="https://apps.apple.com/us/app/avokado-افوكادو/id1265492118" target="_blank">View on App Store</a></p>
+                <img src="assets/avokado.png" alt="Avokado Screenshot">
+            </div>
+
+            <div class="project">
+                <h3>Parishes Online / Communities Online</h3>
+                <p><strong>Domain:</strong> Community Services</p>
+                <p><strong>Tech Stack:</strong> React Native, One Signal</p>
+                <p>Developed apps from scratch and upgraded it to the latest React Native version. Reduced code redundancy by 99% with creating two apps from a single code base with shared functionality using filters and configurations. Enabled search for parishes or communities, detailed information, weekly readings, and donations.</p>
+                <p>
+                    <a href="https://play.google.com/store/apps/details?id=com.lpiapp.lpiParish" target="_blank">Parishes Online (Google Play)</a> |
+                    <a href="https://apps.apple.com/us/app/parishes-online/id6478508687" target="_blank">Parishes Online (App Store)</a> |
+                    <a href="https://apps.apple.com/us/app/communities-online/id6478508698" target="_blank">Communities Online (App Store)</a> |
+                    <a href="https://play.google.com/store/apps/details?id=com.lpiapp.lpiCommunity&hl=en" target="_blank">Communities Online (Google Play)</a>
+                </p>
+                <img src="assets/parishesCommunities.png" alt="Parishes/Communities Screenshot">
+            </div>
+
+            <div class="project">
+                <h3>ReupCycle</h3>
+                <p><strong>Domain:</strong> Business</p>
+                <p><strong>Tech Stack:</strong> Flutter</p>
+                <p>Developed a Flutter-based mobile app for trading used plastic bottles, enabling users to specify bottle quantities, provide pickup addresses, or locate drop-off points, and receive payments based on the number of bottles submitted.</p>
+                <p><a href="https://play.google.com/store/apps/details?id=com.arhpez.reupcycle" target="_blank">View on Google Play</a></p>
+                <img src="assets/Reupcycle1.png" alt="ReupCycle Screenshot">
+            </div>
+
+            <div class="project">
+                <h3>InstaRyde</h3>
+                <p><strong>Domain:</strong> Travel</p>
+                <p><strong>Tech Stack:</strong> Objective C, Google Maps, Google APIs, Braintree, PubNub</p>
+                <p>Canada’s first on-demand ride sharing app that puts a safe, reliable and affordable ride for passengers. Developed an iOS app from scratch while collaborating with stakeholders to meet requirements.</p>
+                <p><a href="https://itunes.apple.com/us/app/instaryde/id948357626?ls=1&mt=8" target="_blank">View on App Store</a></p>
+            </div>
+        </section>
+
+        <footer>
+            <p>Contact: <a href="mailto:sabaanwar411@gmail.com">sabaanwar411@gmail.com</a> | <a href="https://linkedin.com/in/sabaanwar" target="_blank">LinkedIn</a> | <a href="https://github.com/sabaanwar411" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
 </body>
 </html>
