@@ -12,7 +12,7 @@ TeamChat.
 - Project Boards, similar to Trello, enables users to create sprints, tasks, and attach images or videos to tickets. 
 - TeamChat enhances communication with messaging, voice, and video call features.
 - Link: https://apps.apple.com/pk/app/software-funnels/id1268630124
-- ![sfScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/sf1.png) 
+  ![sfScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/sf1.png) 
 
 ### Revealix
 - **Domain**: Medical
@@ -24,7 +24,7 @@ connectivity with FLIR camera.
 - Analyzed thermal imaging data for single and dual limb assessments to detect and
 prevent diabetic limb complications.
 - Link: https://revealix.com/#clinical-meets-technical
-- ![revealixScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/revealix.png)
+  ![revealixScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/revealix.png)
 
 ### Skull Candy
 - **Domain**: Music
@@ -36,7 +36,6 @@ seamless sound configuration.
 - Designed a profile-saving system, allowing users to store and switch between custom
 sound configurations effortlessly.
 - Link: https://apps.apple.com/us/app/skullcandy/id1466689851
-|-------------|---------------|
 |![SkullcandyScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/skullcandy.png) | ![SkullcandyScreenshot2](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/skullcandy2.png) |
 
 ### Loopdeck (Swift)
@@ -47,7 +46,7 @@ sound configurations effortlessly.
 user engagement and app monetization.
 - Integrated Google Mobile Ads to increase app revenue.
 - Link: https://apps.apple.com/us/app/loopdeck-edit-loop-movies/id1593022317
-- ![LoopdeckScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/loopdeck.png)
+![LoopdeckScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/loopdeck.png)
 
 ### Loopideo (Swift)
 - **Domain:** Photos and Video
@@ -57,7 +56,7 @@ storage bugs.
 - Integrated Google Mobile Ads to increase app revenue.
 - Created Pro version with adding filters to enable pro features in the app.
 - Link: https://apps.apple.com/us/app/loopideo-pro-loop-videos/id1343372109 | https://apps.apple.com/us/app/loopideo-loop-videos/id798990531
-- ![loopideoScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/loopideo1.png)
+![loopideoScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/loopideo1.png)
 
 
 ### Avokado افوكادو 
@@ -67,7 +66,7 @@ storage bugs.
 - Maintained app compatibility with newer iOS versions and provided support through bug
 fixes.
 - Link: https://apps.apple.com/us/app/avokado-افوكادو/id1265492118
-- ![avokadoScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/avokado.png)
+![avokadoScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/avokado.png)
 
 ### Parishes Online/Communities Online
 - **Domain:** Community Services
@@ -79,14 +78,14 @@ fixes.
 | https://apps.apple.com/us/app/parishes-online/id6478508687
 | https://apps.apple.com/us/app/communities-online/id6478508698
 | https://play.google.com/store/apps/details?id=com.lpiapp.lpiCommunity&hl=en
-  ![PoScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/parishesCommunities.png)
+![PoScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/parishesCommunities.png)
 
 ### ReupCycle
 - **Domain:** Business
 - **Tech Stack:** Flutter
 - Developed a Flutter-based mobile app for trading used plastic bottles, enabling users to specify bottle quantities, provide pickup addresses, or locate drop-off points, and receive payments based on the number of bottles submitted.
 - Link: https://play.google.com/store/apps/details?id=com.arhpez.reupcycle
-- ![rcScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/Reupcycle1.png)
+![rcScreenshot](https://github.com/sabaanwar411/sabaanwar.github.io/blob/main/assets/Reupcycle1.png)
 
 ### InstaRyde
 - **Domain:** Travel
